@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Nodo de la lista: guarda un dato entero y un puntero al siguiente
 struct Nodo
 {
     int dato;
     struct Nodo *siguiente;
 };
 
+// Inserta un nodo nuevo AL FINAL de la lista
 void insertarAlFinal(struct Nodo **cabeza, int valor)
 {
     struct Nodo *nuevoNodo = (struct Nodo *)malloc(sizeof(struct Nodo)); // Creamos el nuevo nodo
@@ -28,6 +30,7 @@ void insertarAlFinal(struct Nodo **cabeza, int valor)
     temp->siguiente = nuevoNodo; // Enlazamos el último nodo con el nuevo
 }
 
+// Recorre la lista de principio a fin imprimiendo cada valor
 void mostrarLista(struct Nodo *nodo)
 {
     while (nodo != NULL)
@@ -43,11 +46,11 @@ int main()
 {
     struct Nodo *lista = NULL; // Creamos una lista vacía
 
-    // Insertamos nodos al final
-    insertarAlFinal(&lista, 30); // Lista: 20 -> 10 -> 30
-    insertarAlFinal(&lista, 40); // Lista: 20 -> 10 -> 30 -> 40
-    insertarAlFinal(&lista, 50);
-    insertarAlFinal(&lista, 60);
+    // Insertamos nodos al final, así que quedan en el mismo orden en que los insertamos
+    insertarAlFinal(&lista, 30); // Lista: 30
+    insertarAlFinal(&lista, 40); // Lista: 30 -> 40
+    insertarAlFinal(&lista, 50); // Lista: 30 -> 40 -> 50
+    insertarAlFinal(&lista, 60); // Lista: 30 -> 40 -> 50 -> 60
 
     printf("Lista actual:\n");
     mostrarLista(lista); // Muestra la lista completa

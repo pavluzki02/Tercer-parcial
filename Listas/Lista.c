@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Nodo de la lista: guarda un dato entero y un puntero al siguiente
 struct Nodo
 {
     int dato;
     struct Nodo *siguiente;
 };
 
+// Inserta un nodo nuevo AL INICIO de la lista (siempre pasa a ser la cabeza)
 void insertarAlInicio(struct Nodo **cabeza, int valor)
 {
     struct Nodo *nuevoNodo = (struct Nodo *)malloc(sizeof(struct Nodo)); // Reservamos memoria
@@ -14,6 +16,8 @@ void insertarAlInicio(struct Nodo **cabeza, int valor)
     nuevoNodo->siguiente = *cabeza; // El nuevo nodo apunta al nodo actual de la cabeza
     *cabeza = nuevoNodo; // La cabeza de la lista ahora es el nuevo nodo
 }
+
+// Inserta un nodo nuevo AL FINAL de la lista (hay que recorrerla toda para encontrar el último)
 void insertarAlFinal(struct Nodo **cabeza, int valor)
 {
     struct Nodo *nuevoNodo = (struct Nodo *)malloc(sizeof(struct Nodo)); // Creamos el nuevo nodo
@@ -34,11 +38,12 @@ void insertarAlFinal(struct Nodo **cabeza, int valor)
     }
     temp->siguiente = nuevoNodo; // Enlazamos el último nodo con el nuevo
 }
+
 // Función para eliminar el primer nodo que tenga un valor específico
 void eliminarNodo(struct Nodo **cabeza, int valor)
 {
     struct Nodo *temp = *cabeza;
-    struct Nodo *anterior = NULL;
+    struct Nodo *anterior = NULL; // guarda el nodo de atrás para poder "saltear" el eliminado
     while (temp != NULL && temp->dato != valor) // Buscamos el nodo con el valor indicado
     {
         anterior = temp;
@@ -61,6 +66,7 @@ void eliminarNodo(struct Nodo **cabeza, int valor)
     free(temp); // Liberamos la memoria del nodo eliminado
 }
 
+// Recorre la lista buscando un valor. Devuelve 1 si está, 0 si no
 int buscar(struct Nodo *cabeza, int valor)
 {
     struct Nodo *temp = cabeza;
@@ -72,8 +78,10 @@ int buscar(struct Nodo *cabeza, int valor)
         }
         temp = temp->siguiente;
     }
-    return 0; // No encontrado
+    return 0; // No encontrado (se recorrió toda la lista)
 }
+
+// Recorre e imprime todos los valores de la lista
 void mostrarLista(struct Nodo *nodo)
 {
     while (nodo != NULL)
@@ -89,18 +97,18 @@ int main()
 {
     struct Nodo *lista = NULL; // Creamos una lista vacía
 
-    // Insertamos nodos al inicio
+    // Insertamos nodos al inicio (queda en orden inverso al que se insertan)
     insertarAlInicio(&lista, 10); // Lista: 10
     insertarAlInicio(&lista, 20); // Lista: 20 -> 10
 
-    // Insertamos nodos al final
+    // Insertamos nodos al final (queda en el mismo orden que se insertan)
     insertarAlFinal(&lista, 30); // Lista: 20 -> 10 -> 30
     insertarAlFinal(&lista, 40); // Lista: 20 -> 10 -> 30 -> 40
 
     printf("Lista actual:\n");
     mostrarLista(lista); // Muestra la lista completa
 
-    eliminarNodo(&lista, 20); // Eliminamos el nodo con valor 20
+    eliminarNodo(&lista, 20); // Eliminamos el nodo con valor 20 (que es la cabeza)
     printf("Luego de eliminar 20:\n");
     mostrarLista(lista); // Mostramos lista sin el 20
 

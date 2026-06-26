@@ -10,6 +10,7 @@ struct Nodo {
     struct Nodo* siguiente; // Puntero al siguiente nodo
 };
 
+// Estructura auxiliar para devolver de una sola vez los 3 datos que se piden por teclado
 struct Datos{
     int dni;         
     char nombre[50]; 
@@ -48,12 +49,12 @@ void insertarAlFinal(struct Nodo** cabeza, int dni,  char nombre[50], char apell
     }
 }
 
-// Función para eliminar un nodo con un valor específico
+// Función para eliminar un nodo con un dni específico
 void eliminarPersona(struct Nodo** cabeza, int dni) {
     struct Nodo* actual = *cabeza;
-    struct Nodo* anterior = NULL;
+    struct Nodo* anterior = NULL; // guarda el nodo de atrás para poder saltear el que eliminamos
     while (actual != NULL) {
-        if (actual->dni == dni) {
+        if (actual->dni == dni) { // encontramos el dni buscado
             if (anterior == NULL) {
                 // El nodo a eliminar es el primero
                 *cabeza = actual->siguiente;
@@ -78,12 +79,12 @@ void eliminarPersona(struct Nodo** cabeza, int dni) {
 void mostrarLista(struct Nodo* cabeza) { // Recibe la cabeza de la lista
     printf("Elementos de la lista:\n"); // Mensaje inicial
     while (cabeza != NULL) {
-        printf("%d %s %s\n ", cabeza->dni,  cabeza->nombre, cabeza->apellido); // Mostramos el dni del nodo actual
+        printf("%d %s %s\n ", cabeza->dni,  cabeza->nombre, cabeza->apellido); // Mostramos los datos del nodo actual
         cabeza = cabeza->siguiente; // Avanzamos al siguiente nodo
     }
 }
 
-// Función para buscar un número en la lista
+// Función para buscar un dni en la lista (solo informa por consola)
 void buscar(struct Nodo* cabeza, int dniBuscado) {
     struct Nodo* actual = cabeza;
     int encontrado = 0;
@@ -105,6 +106,7 @@ void buscar(struct Nodo* cabeza, int dniBuscado) {
     }
 }
 
+// Imprime el menú de opciones (cada opción es una letra)
 void mostrarMenu() {
     printf("\nMENU DE OPCIONES:\n");
     printf("  'i' - Insertar al inicio\n");
@@ -116,6 +118,7 @@ void mostrarMenu() {
     printf("Seleccione una opción: ");
 }
 
+// Pide por teclado dni, nombre y apellido, y los devuelve juntos en un struct Datos
 struct Datos pedirDatos(){
     int dni;
     char nombre[50];
@@ -123,50 +126,50 @@ struct Datos pedirDatos(){
     printf("Ingrese el DNI: ");
     scanf("%d", &dni);
     printf("Ingrese el nombre: ");
-    scanf("%s", nombre); 
+    scanf("%s", nombre); // %s con scanf corta en el primer espacio (no sirve para nombres compuestos)
     printf("Ingrese el apellido: ");
     scanf("%s", apellido); 
     struct Datos datos;
     datos.dni = dni;
     strcpy(datos.nombre, nombre);
     strcpy(datos.apellido, apellido);
-    return datos;
+    return datos; // devolvemos los 3 datos juntos
 }
 
 int main() {
     struct Nodo* lista = NULL; // Inicialmente, el nodo cabeza es NULL (lista vacía)
     char seguir = 's'; //variable de control para seguir ingresando números
     char option = 'i'; // i= insertar al inicio, f= insertar al final
-    while(seguir == 's' || seguir == 'S') {
+    while(seguir == 's' || seguir == 'S') { // se repite mientras el usuario quiera seguir
         mostrarMenu(); // Mostramos el menú de opciones
         scanf(" %c", &option); // Espacio antes de %c para ignorar espacios en blanco
         if (option == 'i') {
             struct Datos datos = pedirDatos(); // Pedimos los datos al usuario
-            insertarAlInicio(&lista, datos.dni, datos.nombre, datos.apellido); // Insertamos el número al inicio
+            insertarAlInicio(&lista, datos.dni, datos.nombre, datos.apellido); // Insertamos al inicio
         } else if (option == 'f') {
             struct Datos datos = pedirDatos();
-            insertarAlFinal(&lista, datos.dni, datos.nombre, datos.apellido); // Insertamos el número al final
+            insertarAlFinal(&lista, datos.dni, datos.nombre, datos.apellido); // Insertamos al final
         }else if (option == 'e') {
             printf("Ingrese el número a eliminar: ");
             int dniEliminar;
-            scanf("%d", &dniEliminar); // Pedimos el número a eliminar
-            eliminarPersona(&lista, dniEliminar); // Eliminamos el número especificado
+            scanf("%d", &dniEliminar); // Pedimos el dni a eliminar
+            eliminarPersona(&lista, dniEliminar); // Eliminamos la persona con ese dni
         }else if (option == 'm') {
             mostrarLista(lista); // Mostramos la lista
         }else if (option == 'b') {
             int dniBuscar;
             printf("Ingrese el número a buscar: ");
-            scanf("%d", &dniBuscar); // Pedimos el número a buscar
-            buscar(lista, dniBuscar); // Buscamos el número especificado
+            scanf("%d", &dniBuscar); // Pedimos el dni a buscar
+            buscar(lista, dniBuscar); // Buscamos ese dni
         }else{
             printf("Opción no válida. Por favor, intente de nuevo.\n");
-            continue; // Volver al inicio del bucle si la opción no es válida
+            continue; // Volver al inicio del bucle si la opción no es válida (no pregunta si seguir)
         }
         printf("¿Desea ingresar otro número? (s/n): ");
         scanf(" %c", &seguir); // Espacio antes de %c para ignorar espacios en blanco
     }
 
-    // Mostramos la lista resultante
+    // Mostramos la lista resultante al salir del bucle
     mostrarLista(lista);
 
     return 0;
